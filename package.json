@@ -7,6 +7,9 @@
   },
   "dependencies": {
     "@cubejs-backend/mysql-driver": "^0.17.7",
-    "@cubejs-backend/server": "^0.17.8"
+    "@cubejs-backend/server": "^0.17.8",
+    "@types/node": "^13.7.6",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.2"
   }
 }
