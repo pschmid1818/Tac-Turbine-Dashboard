@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "node index.js"
+    "dev": "node -r ts-node/register index.ts"
   },
   "dependencies": {
     "@cubejs-backend/mysql-driver": "^0.17.7",
