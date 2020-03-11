@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import "./body.css";
 import clsx from 'clsx';
+import SvgIcon from '@material-ui/core/SvgIcon';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,7 +17,7 @@ import { useStyles } from './Styles';
 
 const Sidebar = () => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const handleDrawerOpen = () => {
       setOpen(true);
     };
@@ -24,7 +25,7 @@ const Sidebar = () => {
       setOpen(false);
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
+    
     return (
         <div>
         <AppBar position="fixed" className={clsx(classes.appBar, open && classes.appBarShift)}>
@@ -38,8 +39,10 @@ const Sidebar = () => {
                 >
                     <MenuIcon />
                 </IconButton>
+                <SvgIcon>
+                </SvgIcon>
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                    TAC Turbine Dashboard
+                Clarkson University Ducted Wind Turbine
                 </Typography>
             </Toolbar>
         </AppBar>
@@ -47,8 +50,9 @@ const Sidebar = () => {
         variant="permanent"
         classes={{
         paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
+
+    }}
+       
         >
             <div className={classes.toolbarIcon}>
                 <IconButton onClick={handleDrawerClose}>

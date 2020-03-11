@@ -3,13 +3,14 @@ import "./App.css";
 import "./body.css";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Sidebar from "./Sidebar";
-import { Layout } from "antd";
+import Dashboard from "./components/Dashboard"
 import cubejs from "@cubejs-client/core";
 import { CubeProvider } from "@cubejs-client/react";
 import WebSocketTransport from "@cubejs-client/ws-transport";
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { useStyles } from './Styles';
+import Container from '@material-ui/core/Container';
 
 
 
@@ -49,13 +50,15 @@ return (
   <CssBaseline/>
   <Sidebar/>
     <main className={classes.Content}>
-      <div className={classes.appBarSpacer}>
-        <CubeProvider cubejsApi={cubejsApi}>
-          <Layout.Content>{children}</Layout.Content>
-        </CubeProvider>
-      </div>
+    <Container maxWidth="xl" className={classes.container}>
+        <div className={classes.appBarSpacer}>
+          <CubeProvider cubejsApi={cubejsApi}>
+            <Dashboard>{children}</Dashboard>
+          </CubeProvider>
+        </div>
+      <Copyright/>
+      </Container>
     </main>
-  <Copyright/>
   </div>
 
 );
