@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "lib": ["ES2018", "DOM", "ES7"],
+        "moduleResolution": "node",
+        "outDir": "./built",
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "target": "ESNext"
+    },
+    "include": [
+        "./src/**/*",
+        "./**/*.json"
+    ]
+}
