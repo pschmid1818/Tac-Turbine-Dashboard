@@ -13,12 +13,9 @@ import { useStyles } from './Styles';
 import Container from '@material-ui/core/Container';
 
 
-
-const drawerWidth = 240;
-
-const API_URL = "http://128.153.47.238:4000";
+const API_URL = "http://localhost:4000";
 const CUBEJS_TOKEN =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODU1Nzk4Mjl9.0aSyAcNtMg2zU6M6ufshAr2-SBrZPvoC9_ljvdkvhNY";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODU1Nzk4Mjl9.0aSyAcNtMg2zU6M6ufshAr2-SBrZPvoC9_ljvdkvhNY";
 const cubejsApi = cubejs({
   transport: new WebSocketTransport({
     authorization: CUBEJS_TOKEN,
@@ -41,26 +38,25 @@ function Copyright() {
   );
 }
 
-const App = ({ children }) => 
-{
+const App = ({ children }) => {
   const classes = useStyles();
 
-return (
-  <div className={classes.root}>
-  <CssBaseline/>
-  <Sidebar/>
-    <main className={classes.Content}>
-    <Container maxWidth="xl" className={classes.container}>
-        <div className={classes.appBarSpacer}>
-          <CubeProvider cubejsApi={cubejsApi}>
-            <Dashboard>{children}</Dashboard>
-          </CubeProvider>
-        </div>
-      <Copyright/>
-      </Container>
-    </main>
-  </div>
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <Sidebar />
+      <main className={classes.Content}>
+        <Container className={classes.container}>
+          <div className={classes.appBarSpacer}>
+            <CubeProvider cubejsApi={cubejsApi}>
+              <Dashboard>{children}</Dashboard>
+            </CubeProvider>
+          </div>
+          <Copyright className={classes.copyright}/>
+        </Container>
+      </main>
+    </div>
 
-);
+  );
 }
 export default App;

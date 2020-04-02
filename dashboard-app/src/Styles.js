@@ -70,6 +70,9 @@ export const useStyles = makeStyles(theme => ({
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4),
     },
+    copyright:{
+      bottom:0
+    },
     paper: {
       padding: theme.spacing(2),
       display: 'flex',

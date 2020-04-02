@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import ChartRenderer from "../components/ChartRenderer";
 import Dashboard from "../components/Dashboard";
 import DashboardItem from "../components/DashboardItem";
+import { useStyles } from "../Styles"
 const DashboardItems = [
   {
     id: 0,
@@ -49,24 +50,12 @@ const DashboardPage = () => {
       </DashboardItem>
     </Grid>
   );
+  const classes = useStyles()
 
-  const Empty = () => (
-    <div
-      style={{
-        textAlign: "center",
-        padding: 12
-      }}
-    >
-      <Typography variant="h5" color="inherit">
-        There are no charts on this dashboard. Use Playground Build to add one.
-      </Typography>
+  return (
+    <div className={classes.container}>
+      <Dashboard>{DashboardItems.map(dashboardItem)}</Dashboard>
     </div>
-  );
-
-  return DashboardItems.length ? (
-    <Dashboard>{DashboardItems.map(dashboardItem)}</Dashboard>
-  ) : (
-    <Empty />
   );
 };
 

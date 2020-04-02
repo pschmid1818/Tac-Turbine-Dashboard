@@ -11,30 +11,32 @@ import ComputerIcon from '@material-ui/icons/Computer';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import { Link } from 'react-router-dom'
+
 
 export const mainListItems = (
   <div>
-    <ListItem button>
+    <ListItem button component={Link} to="/">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Home" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/historical_data">
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Historical Data" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/system">
       <ListItemIcon>
         <ComputerIcon />
       </ListItemIcon>
       <ListItemText primary="System" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to="/more_info">
       <ListItemIcon>
-        <InfoIcon/>
+        <InfoIcon />
       </ListItemIcon>
       <ListItemText primary="More Info" />
     </ListItem>

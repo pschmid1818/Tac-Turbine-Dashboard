@@ -12,61 +12,60 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { mainListItems, secondaryListItems } from './components/listitems';
+import { mainListItems } from './components/listitems';
 import { useStyles } from './Styles';
 
 const Sidebar = () => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleDrawerOpen = () => {
-      setOpen(true);
+        setOpen(true);
     };
     const handleDrawerClose = () => {
-      setOpen(false);
+        setOpen(false);
     };
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    
+
     return (
-        <div>
-        <AppBar position="fixed" className={clsx(classes.appBar, open && classes.appBarShift)}>
-            <Toolbar className={classes.toolbar}>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawerOpen}
-                    className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <SvgIcon>
-                </SvgIcon>
-                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                Clarkson University Ducted Wind Turbine
-                </Typography>
-            </Toolbar>
-        </AppBar>
-        <Drawer
-        variant="permanent"
-        classes={{
-        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        <>
+            <AppBar position="fixed" className={clsx(classes.appBar, open && classes.appBarShift)}>
+                <Toolbar className={classes.toolbar}>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <SvgIcon>
+                    </SvgIcon>
+                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                        Clarkson University Ducted Wind Turbine
+        </Typography>
+                </Toolbar>
+            </AppBar>
 
-    }}
-       
-        >
-            <div className={classes.toolbarIcon}>
-                <IconButton onClick={handleDrawerClose}>
-                    <ChevronLeftIcon />
-                </IconButton>
-            </div>
-            <Divider />
-            <List>{mainListItems}</List>
-        </Drawer>
-        </div>
+            <Drawer
+                variant="permanent"
+                classes={{ paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose) }}
 
-        
-        
+            >
+                <div className={classes.toolbarIcon}>
+                    <IconButton onClick={handleDrawerClose}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </div>
+                <Divider />
+                <List>{mainListItems}</List>
+            </Drawer>
+        </>
+
+
+
+
+
     );
-} 
+}
 
 export default Sidebar;
