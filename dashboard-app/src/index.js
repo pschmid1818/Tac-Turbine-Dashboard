@@ -12,7 +12,7 @@ import HistoricalData from "./pages/HistoricalData";
 import SystemPage from "./pages/System";
 import MoreInfo from "./pages/MoreInfo";
 
-function Test() {
+function Main() {
   const classes = useStyles();
   return (
     <Router>
@@ -35,7 +35,7 @@ function Test() {
 
 
 ReactDOM.render(
-  <Test />
+  <Main />
   ,
   document.getElementById("root")
 ); // If you want your app to work offline and load faster, you can change
