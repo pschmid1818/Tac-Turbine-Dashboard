@@ -75,6 +75,8 @@ export const useStyles = makeStyles(theme => ({
       display: 'flex',
       overflow: 'auto',
       flexDirection: 'column',
+      alignItems: 'stretch',
+
     },
     fixedHeight: {
       height: 240,
