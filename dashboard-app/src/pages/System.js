@@ -10,7 +10,7 @@ const SystemPage = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
-            <h1>system</h1>
+            <h1>System</h1>
         </div>
     )
 };
