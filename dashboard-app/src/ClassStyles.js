@@ -77,6 +77,14 @@ export const classStyles = theme => ({
         alignItems: 'stretch',
 
     },
+    rowPaper:{
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+
+    },
     fixedHeight: {
         height: 240,
     },

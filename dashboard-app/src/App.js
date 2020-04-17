@@ -43,10 +43,8 @@ const App = ({ children }) => {
   return (
     <React.Fragment>
       <div className={classes.appBarSpacer} />
-      <Container maxWidth="xl" className={classes.container} >
-        <CubeProvider cubejsApi={cubejsApi}>
+      <Container maxWidth="lg" className={classes.container} >
           <div>{children}</div>
-        </CubeProvider>
         <Box pt={4}>
           <Copyright />
         </Box>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
@@ -9,6 +9,8 @@ import Title from "../components/Title";
 import { getDefaultSettings } from "http";
 import Clock from "../components/Clock";
 import { classStyles } from "../ClassStyles";
+import HourlyEnergyChart from "../components/HourlyEnergyChart";
+import InstantaneousPowerChart from "../components/InstantaneousPowerChart";
 
 
 class DashboardPage extends React.Component {
@@ -48,13 +50,25 @@ class DashboardPage extends React.Component {
     fetch(url)
       .then(res => res.json())
       .then(
-        (result) => this.setState({
-          w_heading: result.wind.deg,
-          w_speed: result.wind.speed,
-          humidity: result.main.humidity,
-          temp: this.kToF(result.main.temp),
-          pressure: result.main.pressure,
-        })
+        (result) => {
+          if (result.cod == 429) {
+
+          }
+          else {
+            this.setState({
+              w_heading: result.wind.deg,
+              w_speed: result.wind.speed,
+              humidity: result.main.humidity,
+              temp: this.kToF(result.main.temp),
+              pressure: result.main.pressure,
+            });
+          }
+        },
+        (error) => {
+          this.setState({
+
+          });
+        }
       )
   }
 
@@ -64,71 +78,99 @@ class DashboardPage extends React.Component {
       <React.Fragment>
         <Grid container spacing={3}>
           <Grid item>
-            <Paper className={classes.paper}>
+            <Paper className={classes.rowPaper}>
               <Grid container spacing={3}>
                 <Grid item>
-                  <div id="conditions_title" align="center">
-                    <Title>Current Conditions</Title>
-                    <Typography variant='subtitle1'><i>Clarkson University, Potsdam, NY</i></Typography>
-                  </div>
-                  <div align="center">
-                    <Clock />
-                  </div>
-                  <div id="w_heading" align="center">
-                    <b>Wind Heading: </b> {this.state.w_heading}°
-                </div>
-                  <div id="humidity" align="center">
-                    <b>Humidity: </b> {this.state.humidity}%
-                </div>
-                  <div id="temp" align="center">
-                    <b>Temperature: </b> {this.state.temp}°F
-                </div>
-                  <div id="pressure" align="center">
-                    <b>Pressure: </b> {this.state.pressure} mbar
-                </div>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={3}
+                  >
+                    <Grid item id="conditions_title" >
+                      <Title>Current Conditions</Title>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant='subtitle1'><i>Clarkson University, Potsdam, NY</i></Typography>
+                    </Grid>
+                    <Grid item>
+                      <Clock />
+                    </Grid>
+                    <Grid item id="w_heading" >
+                      <b>Wind Heading: </b> {this.state.w_heading}°
+                    </Grid>
+                    <Grid item id="humidity" >
+                      <b>Humidity: </b> {this.state.humidity}%
+                    </Grid>
+                    <Grid item id="temp" >
+                      <b>Temperature: </b> {this.state.temp}°F
+                    </Grid>
+                    <Grid item id="pressure" >
+                      <b>Pressure: </b> {this.state.pressure} mbar
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item>
-                  <ReactSpeedometer
-                    maxValue={45}
-                    value={this.state.w_speed}
-                    currentValueText="Wind Speed: ${value} mph" />
-
-                  <ReactSpeedometer
-                    maxValue={4500}
-                    value={this.state.power}
-                    currentValueText="Power: ${value} W" />
+                  <Grid container direction="column" spacing={3}>
+                    <Grid item>
+                      <ReactSpeedometer
+                        maxValue={45}
+                        value={this.state.w_speed}
+                        currentValueText="Wind Speed: ${value} mph"
+                        startColor="lightgreen"
+                        endColor="red"
+                        width={250}
+                        height={150}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <ReactSpeedometer
+                        maxValue={4500}
+                        value={this.state.power}
+                        currentValueText="Power: ${value} W"
+                        startColor="lightgreen"
+                        endColor="red"
+                        width={250}
+                        height={150} />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
-
           <Grid item>
             <Paper className={classes.paper}>
               <Title>Live View</Title>
-              <img alt="Not Loaded" src="https://zoneminder.clarkson.edu/cgi-bin-zm/zms?mode=jpeg&maxfps=30&monitor=15&user=viewer1&pass=media4u" height="480" width="704" />
+              <img
+                alt="Not Loaded"
+                src="https://zoneminder.clarkson.edu/cgi-bin-zm/zms?mode=jpeg&maxfps=30&monitor=15&user=viewer1&pass=media4u"
+                height="302"
+               />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.paper}>
+              <div align="center">
+              <Title>Hourly Energy Output</Title>
+              </div>
+              <HourlyEnergyChart />
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper className={classes.paper}>
+              <div align="center">
+              <Title>Instantaneous Power Output</Title>
+              </div>
+              <InstantaneousPowerChart />
             </Paper>
           </Grid>
         </Grid>
-      </React.Fragment>
+
+      </React.Fragment >
     );
   }
 }
-
-// function updateWeather(w_heading, humidity, temp, pressure) {
-//   this.setState({
-//     w_heading: w_heading,
-//     humidity: humidity,
-//     temp: temp,
-//     pressure: pressure
-//   })
-// }
-
-// function updateSpeed(newSpeed) {
-//   this.setState({
-//     windSpeed: newSpeed
-//   })
-// }
-
 
 
 export default withStyles(classStyles)(DashboardPage);
