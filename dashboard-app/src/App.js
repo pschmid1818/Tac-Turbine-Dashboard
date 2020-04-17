@@ -11,7 +11,7 @@ import Link from '@material-ui/core/Link';
 import { useStyles } from './Styles';
 import Container from '@material-ui/core/Container';
 
-const API_URL = "http://localhost:4000";
+export const API_URL = "http://localhost:4000";
 const CUBEJS_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODU1Nzk4Mjl9.0aSyAcNtMg2zU6M6ufshAr2-SBrZPvoC9_ljvdkvhNY";
 const cubejsApi = cubejs({
@@ -29,7 +29,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Caleb DeLaBruere
+        Caleb DeLaBruere, Zachary Damato
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
