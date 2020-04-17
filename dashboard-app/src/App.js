@@ -8,8 +8,17 @@ import { useStyles } from './Styles';
 import Container from '@material-ui/core/Container';
 
 export const API_URL = "http://localhost:4000";
-export const CUBEJS_TOKEN =
+const CUBEJS_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODU1Nzk4Mjl9.0aSyAcNtMg2zU6M6ufshAr2-SBrZPvoC9_ljvdkvhNY";
+const cubejsApi = cubejs({
+  transport: new WebSocketTransport({
+    authorization: CUBEJS_TOKEN,
+    apiUrl: API_URL.replace("http", "ws")
+  })
+});
+
+
+
 
 function Copyright() {
   return (
