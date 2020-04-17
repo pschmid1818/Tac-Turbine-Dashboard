@@ -11,11 +11,14 @@ import DashboardPage from "./pages/DashboardPage";
 import HistoricalData from "./pages/HistoricalData";
 import SystemPage from "./pages/System";
 import MoreInfo from "./pages/MoreInfo";
+import theme from "./Theme";
+import {ThemeProvider} from "@material-ui/core";
 
 function Main() {
   const classes = useStyles();
   return (
     <Router>
+      <ThemeProvider theme={theme}>
       <div className={classes.root}>
         <CssBaseline />
         <Sidebar />
@@ -28,6 +31,7 @@ function Main() {
           </App>
         </div>
       </div>
+      </ThemeProvider>
     </Router>
   );
 

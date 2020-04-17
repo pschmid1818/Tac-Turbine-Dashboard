@@ -2,10 +2,6 @@ import React from "react";
 import "./App.css";
 import "./body.css";
 import Box from '@material-ui/core/Box';
-
-import cubejs from "@cubejs-client/core";
-import { CubeProvider } from "@cubejs-client/react";
-import WebSocketTransport from "@cubejs-client/ws-transport";
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { useStyles } from './Styles';
@@ -43,10 +39,8 @@ const App = ({ children }) => {
   return (
     <React.Fragment>
       <div className={classes.appBarSpacer} />
-      <Container maxWidth="xl" className={classes.container} >
-        <CubeProvider cubejsApi={cubejsApi}>
+      <Container maxWidth="lg" className={classes.container} >
           <div>{children}</div>
-        </CubeProvider>
         <Box pt={4}>
           <Copyright />
         </Box>
