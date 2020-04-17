@@ -4,9 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import ReactSpeedometer from "react-d3-speedometer";
 import { withStyles } from '@material-ui/core/styles';
-import { Container } from "@material-ui/core";
 import Title from "../components/Title";
-import { getDefaultSettings } from "http";
 import Clock from "../components/Clock";
 import { classStyles } from "../ClassStyles";
 import HourlyEnergyChart from "../components/HourlyEnergyChart";
@@ -27,7 +25,7 @@ class DashboardPage extends React.Component {
   }
 
   componentDidMount() {
-    this.getWeatherData();
+    // this.getWeatherData();
     // TODO: Uncomment for refreshing weather data
     // this.timerID = setInterval(
     //   () => this.getWeatherData(),
@@ -36,7 +34,7 @@ class DashboardPage extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);
+    // clearInterval(this.timerID);
   }
 
   kToF(temp) {

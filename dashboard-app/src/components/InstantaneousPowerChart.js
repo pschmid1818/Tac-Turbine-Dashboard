@@ -4,18 +4,11 @@ import { QueryRenderer } from '@cubejs-client/react';
 import { Spin } from 'antd';
 import {
   CartesianGrid,
-  PieChart,
-  Pie,
-  Cell,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
   Legend,
-  BarChart,
-  Bar,
   LineChart,
   Line
 } from "recharts";
