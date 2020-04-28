@@ -25,7 +25,7 @@ const MoreInfo = () => {
                     <Paper className={classes.paper}>
                         <Title>More Information</Title>
                         <div>A ducted turbine uses a duct or shroud to increase the mass flow through the wind turbine rotor. This increases the wind power that the rotor ‘sees’ and thus the amount of energy it can extract from the air. Ducted turbines can double the output energy for a given rotor size, but there is an increased cost for the additional structure.</div>
-                        <img src={Pic1} height = '500px' width = '1000px'></img>
+                        <img src={Pic1} height = '800px' width = '100%'></img>
                         <div>Note that the smaller opening of the duct is, non-intuitively, pointing upstream.</div>
                         <br></br>
                         <br></br>
@@ -41,8 +41,8 @@ const MoreInfo = () => {
                         <br></br>
                         <div>For more of the test results or DWT use one of the QR codes below.</div>
                         <div class="column">
-                            <img src={Pic5} height = '300px' width = '350'></img>
-                            <img src={Pic6} height = '300px' width = '300'></img>
+                            <img src={Pic5} height = '200px' width = '235px'></img>
+                            <img src={Pic6} height = '210px' width = '200px'></img>
                         </div>
                         <br></br>
                         <br></br>
@@ -51,7 +51,7 @@ const MoreInfo = () => {
                         <br></br>
                         <div>In 2017, the Clarkson campus voted to use the annual Institute for a Sustainable Environment’s Sustainability Fund to build a prototype ducted wind turbine on campus. Professor Visser, the lead designer and implementer, continues to use it as a research test bed to improve the system design.</div>
                         <br></br>
-                        <img src={Pic4} height = '600px' width = '1400px'></img>
+                        <img src={Pic4} height = '600px' width = '100%'></img>
                         <div>For more information, contact Dr. Visser at kvisser@clarkson.edu</div>
                     </Paper>
                 </grid>
