@@ -117,11 +117,11 @@ const HistoricalData = () => {
     const classes = useStyles();
 
     const [graph1Type, setGraph1Type] = React.useState(GraphTypes.totalEnergyGraph);
+    const [graph1Granularity, setGraph1Granularity] = React.useState(GranularityTypes.day);
     const [graph2Type, setGraph2Type] = React.useState(GraphTypes.totalEnergyGraph);
+    const [graph2Granularity, setGraph2Granularity] = React.useState(GranularityTypes.day);
     const [startDate, setStartDate] = React.useState(new Date( Date.now() - ( startDateOffset * 24 * 60 * 60 * 1000)));
     const [endDate, setEndDate] = React.useState(new Date());
-
-    const [granularity, setGranularity] = React.useState(GranularityTypes.day);
 
     function renderDateRangeSelector(): JSX.Element {
         return (
@@ -162,7 +162,7 @@ const HistoricalData = () => {
     function renderGranularitySelector(granularity: string, setGranularity): JSX.Element {
         return (
             <Paper>
-                <Title>Set Time Scale</Title>
+                {/* <h3>Set Time Scale</h3> */}
                 <FormControl>
                     <Select
                         value={granularity}
@@ -175,7 +175,7 @@ const HistoricalData = () => {
         );
     }
     
-    function renderGraphBox(graphType: string, setGraphType): JSX.Element {
+    function renderGraphBox(graphType: string, setGraphType, granularity: string, setGranularity): JSX.Element {
         return (
             <Paper>
                 <FormControl>
@@ -186,6 +186,7 @@ const HistoricalData = () => {
                         {renderSelectorItemsFromObject(GraphTypes)}
                     </Select>
                 </FormControl>
+                {renderGranularitySelector(granularity, setGranularity)}
                 {renderGraph(graphType, startDate, endDate, granularity)}
             </Paper>
         );
@@ -194,16 +195,13 @@ const HistoricalData = () => {
     return (
         <Grid container spacing={3}>
             <Grid item>
-                {renderGraphBox(graph1Type, setGraph1Type)}
+                {renderGraphBox(graph1Type, setGraph1Type, graph1Granularity, setGraph1Granularity)}
             </Grid>
             <Grid item>
-                {renderGraphBox(graph2Type, setGraph2Type)}
+                {renderGraphBox(graph2Type, setGraph2Type, graph2Granularity, setGraph2Granularity)}
             </Grid>
             <Grid item>
                 {renderDateRangeSelector()}
-            </Grid>
-            <Grid item>
-                {renderGranularitySelector(granularity, setGranularity)}
             </Grid>
         </Grid>
     );
