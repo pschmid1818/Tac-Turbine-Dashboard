@@ -30,7 +30,7 @@ const App = ({ children }) => {
   return (
     <React.Fragment>
       <div className={classes.appBarSpacer} />
-      <Container maxWidth="lg" className={classes.container} >
+      <Container maxWidth="xl" className={classes.container} >
           <div>{children}</div>
         <Box pt={4}>
           <Copyright />
