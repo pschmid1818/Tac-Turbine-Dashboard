@@ -25,24 +25,11 @@ const cubejsApi = cubejs(
   );
 
 const GraphTypes = {
+    turbineVoltage: "Turbine Voltage",
     totalEnergyGraph: "Total Energy",
-    inverterCurrent: "Inverter Current"
-    // turbineVoltage = "volt",
-    // turbineRPM = "rpm",
-    // windSpeed = "wind",
-    // hourlyEnergyDistribution = "hourlyEnergy",
-    // dailyEnergyDistribution = "dailyEnergy",
-    // inverterVoltage = "inverter volt",
-    // inverterCurrent = "inverter current",
-    // inverterPower = "inverter power"
-
-    // totalEnergyGraph = "Total Energy",
-    // averageTemperature = "Average Temperature",
-    // averageWindSpeed = "Average Wind Speed",
-    // averageWindHeading = "Average Wind heading",
-    // averageAirPressure = "Average Air Pressure",
-    // typicalHouseholdElectricityNeeds = "Typical Household Electricity Needs",
-
+    inverterCurrent: "Inverter Current",
+    inverterPower: "Inverter Power",
+    inverterVoltage: "Inverter Voltage"
 };
 
 const GranularityTypes =  {
@@ -54,13 +41,12 @@ const GranularityTypes =  {
 
 const GraphTypeToColumnMap = new Map<String, String>();
 //These columns were not available to us at the time of development, so they could not be populated here
+GraphTypeToColumnMap.set(GraphTypes.turbineVoltage, "DashboardData.Voltage");
 GraphTypeToColumnMap.set(GraphTypes.totalEnergyGraph, "DashboardData.Power");
 GraphTypeToColumnMap.set(GraphTypes.inverterCurrent, "DashboardData.InverterI");
-// GraphTypeToColumnMap.set(GraphTypes.averageTemperature, "");
-// GraphTypeToColumnMap.set(GraphTypes.averageWindSpeed, "");
-// GraphTypeToColumnMap.set(GraphTypes.averageWindHeading, "");
-// GraphTypeToColumnMap.set(GraphTypes.averageAirPressure, "");
-// GraphTypeToColumnMap.set(GraphTypes.typicalHouseholdElectricityNeeds, "");
+GraphTypeToColumnMap.set(GraphTypes.inverterPower, "DashboardData.InverterL");
+GraphTypeToColumnMap.set(GraphTypes.inverterVoltage, "DashboardData.InverterV");
+
 
 const stackedChartData = (resultSet) => {
     const data = resultSet.pivot().map(
