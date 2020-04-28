@@ -25,24 +25,11 @@ const cubejsApi = cubejs(
   );
 
 const GraphTypes = {
+    turbineVoltage: "Turbine Voltage",
     totalEnergyGraph: "Total Energy",
-    inverterCurrent: "Inverter Current"
-    // turbineVoltage = "volt",
-    // turbineRPM = "rpm",
-    // windSpeed = "wind",
-    // hourlyEnergyDistribution = "hourlyEnergy",
-    // dailyEnergyDistribution = "dailyEnergy",
-    // inverterVoltage = "inverter volt",
-    // inverterCurrent = "inverter current",
-    // inverterPower = "inverter power"
-
-    // totalEnergyGraph = "Total Energy",
-    // averageTemperature = "Average Temperature",
-    // averageWindSpeed = "Average Wind Speed",
-    // averageWindHeading = "Average Wind heading",
-    // averageAirPressure = "Average Air Pressure",
-    // typicalHouseholdElectricityNeeds = "Typical Household Electricity Needs",
-
+    inverterCurrent: "Inverter Current",
+    inverterPower: "Inverter Power",
+    inverterVoltage: "Inverter Voltage"
 };
 
 const GranularityTypes =  {
@@ -54,13 +41,12 @@ const GranularityTypes =  {
 
 const GraphTypeToColumnMap = new Map<String, String>();
 //These columns were not available to us at the time of development, so they could not be populated here
+GraphTypeToColumnMap.set(GraphTypes.turbineVoltage, "DashboardData.Voltage");
 GraphTypeToColumnMap.set(GraphTypes.totalEnergyGraph, "DashboardData.Power");
 GraphTypeToColumnMap.set(GraphTypes.inverterCurrent, "DashboardData.InverterI");
-// GraphTypeToColumnMap.set(GraphTypes.averageTemperature, "");
-// GraphTypeToColumnMap.set(GraphTypes.averageWindSpeed, "");
-// GraphTypeToColumnMap.set(GraphTypes.averageWindHeading, "");
-// GraphTypeToColumnMap.set(GraphTypes.averageAirPressure, "");
-// GraphTypeToColumnMap.set(GraphTypes.typicalHouseholdElectricityNeeds, "");
+GraphTypeToColumnMap.set(GraphTypes.inverterPower, "DashboardData.InverterL");
+GraphTypeToColumnMap.set(GraphTypes.inverterVoltage, "DashboardData.InverterV");
+
 
 const stackedChartData = (resultSet) => {
     const data = resultSet.pivot().map(
@@ -131,11 +117,11 @@ const HistoricalData = () => {
     const classes = useStyles();
 
     const [graph1Type, setGraph1Type] = React.useState(GraphTypes.totalEnergyGraph);
+    const [graph1Granularity, setGraph1Granularity] = React.useState(GranularityTypes.day);
     const [graph2Type, setGraph2Type] = React.useState(GraphTypes.totalEnergyGraph);
+    const [graph2Granularity, setGraph2Granularity] = React.useState(GranularityTypes.day);
     const [startDate, setStartDate] = React.useState(new Date( Date.now() - ( startDateOffset * 24 * 60 * 60 * 1000)));
     const [endDate, setEndDate] = React.useState(new Date());
-
-    const [granularity, setGranularity] = React.useState(GranularityTypes.day);
 
     function renderDateRangeSelector(): JSX.Element {
         return (
@@ -176,7 +162,7 @@ const HistoricalData = () => {
     function renderGranularitySelector(granularity: string, setGranularity): JSX.Element {
         return (
             <Paper>
-                <Title>Set Time Scale</Title>
+                {/* <h3>Set Time Scale</h3> */}
                 <FormControl>
                     <Select
                         value={granularity}
@@ -189,7 +175,7 @@ const HistoricalData = () => {
         );
     }
     
-    function renderGraphBox(graphType: string, setGraphType): JSX.Element {
+    function renderGraphBox(graphType: string, setGraphType, granularity: string, setGranularity): JSX.Element {
         return (
             <Paper>
                 <FormControl>
@@ -200,6 +186,7 @@ const HistoricalData = () => {
                         {renderSelectorItemsFromObject(GraphTypes)}
                     </Select>
                 </FormControl>
+                {renderGranularitySelector(granularity, setGranularity)}
                 {renderGraph(graphType, startDate, endDate, granularity)}
             </Paper>
         );
@@ -208,16 +195,13 @@ const HistoricalData = () => {
     return (
         <Grid container spacing={3}>
             <Grid item>
-                {renderGraphBox(graph1Type, setGraph1Type)}
+                {renderGraphBox(graph1Type, setGraph1Type, graph1Granularity, setGraph1Granularity)}
             </Grid>
             <Grid item>
-                {renderGraphBox(graph2Type, setGraph2Type)}
+                {renderGraphBox(graph2Type, setGraph2Type, graph2Granularity, setGraph2Granularity)}
             </Grid>
             <Grid item>
                 {renderDateRangeSelector()}
-            </Grid>
-            <Grid item>
-                {renderGranularitySelector(granularity, setGranularity)}
             </Grid>
         </Grid>
     );
