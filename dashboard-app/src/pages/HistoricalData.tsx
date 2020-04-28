@@ -16,6 +16,7 @@ import { useStyles } from "../Styles"
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 import { Spin } from 'antd';
 import { Chart, Axis, Tooltip, Geom, Coord, Legend } from 'bizcharts';
+import FormControl from "@material-ui/core/FormControl";
 
 
 const cubejsApi = cubejs(
@@ -23,22 +24,29 @@ const cubejsApi = cubejs(
     { apiUrl: App.API_URL + "/cubejs-api/v1" }
   );
 
-enum GraphTypes {
-    totalEnergyGraph = "Total Energy",
-    averageTemperature = "Average Temperature",
-    averageWindSpeed = "Average Wind Speed",
-    averageWindHeading = "Average Wind heading",
-    averageAirPressure = "Average Air Pressure",
-    typicalHouseholdElectricityNeeds = "Typical Household Electricity Needs"
+const GraphTypes = {
+    turbineVoltage: "Turbine Voltage",
+    totalEnergyGraph: "Total Energy",
+    inverterCurrent: "Inverter Current",
+    inverterPower: "Inverter Power",
+    inverterVoltage: "Inverter Voltage"
 };
 
-const GraphTypeToColumnMap = new Map<string, string>();
+const GranularityTypes =  {
+    day: "day",
+    // hour: "hour",
+    month: "month",
+    year: "year"
+};
+
+const GraphTypeToColumnMap = new Map<String, String>();
+//These columns were not available to us at the time of development, so they could not be populated here
+GraphTypeToColumnMap.set(GraphTypes.turbineVoltage, "DashboardData.Voltage");
 GraphTypeToColumnMap.set(GraphTypes.totalEnergyGraph, "DashboardData.Power");
-GraphTypeToColumnMap.set(GraphTypes.averageTemperature, "");
-GraphTypeToColumnMap.set(GraphTypes.averageWindSpeed, "");
-GraphTypeToColumnMap.set(GraphTypes.averageWindHeading, "");
-GraphTypeToColumnMap.set(GraphTypes.averageAirPressure, "");
-GraphTypeToColumnMap.set(GraphTypes.typicalHouseholdElectricityNeeds, "");
+GraphTypeToColumnMap.set(GraphTypes.inverterCurrent, "DashboardData.InverterI");
+GraphTypeToColumnMap.set(GraphTypes.inverterPower, "DashboardData.InverterL");
+GraphTypeToColumnMap.set(GraphTypes.inverterVoltage, "DashboardData.InverterV");
+
 
 const stackedChartData = (resultSet) => {
     const data = resultSet.pivot().map(
@@ -66,146 +74,136 @@ const renderChart = (Component) => ({ resultSet, error }) => (
     (resultSet && <Component resultSet={resultSet} />) ||
     (error && error.toString()) || 
     (<Spin />)
-  )
+)
 
-class GraphInstance extends React.Component {
-    constructor(props: any) {
-        super(props);
-        
-        this.selectedType = GraphTypes.totalEnergyGraph;
-        this.setGraphMeasuresColumn();
-    }
-
-    selectedType: GraphTypes;
-
-    renderGraphSelectorItems(): JSX.Element[] {
-        const output: JSX.Element[] = [];
-        for(const type in GraphTypes) {
-            console.log(type)
-            output.push(<MenuItem value={type}>{type}</MenuItem>);
-        }
-        return output;
-    }
-
-    graphQuery: any = {
-        "measures": [],
+function renderGraph(graphType: String, startDate: Date, endDate: Date, granularity: string): JSX.Element {
+    const graphQuery = {
+        "measures": [
+            GraphTypeToColumnMap.get(graphType),
+        ],
         "timeDimensions": [
             {
                 "dimension": "DashboardData.time",
-                "granularity": "day"
+                dateRange: [startDate, endDate],
+                "granularity": granularity
             }
         ],
         "filters": []
     };
 
-    setGraphMeasuresColumn() {
-        this.graphQuery.measures = [GraphTypeToColumnMap.get(this.selectedType)];
-    }
+    return (
+        <QueryRenderer
+            query={graphQuery}
+            cubejsApi={cubejsApi}
+            render={renderChart(barRender)}
+        >
 
-    graph(): JSX.Element {
-        return (
-            <QueryRenderer
-                query={this.graphQuery}
-                cubejsApi={cubejsApi}
-                render={renderChart(barRender)}
-            >
-
-            </QueryRenderer>
-        );
-    }
-
-    renderGraphSelector(): JSX.Element {
-        return (
-            <div>
-                <Select
-                    name='graphSelector'
-                    value={this.selectedType}
-                    onChange={() => {this.setGraphMeasuresColumn()}}
-                >
-                    {this.renderGraphSelectorItems()}
-                </Select>
-                {this.graph()}
-            </div>
-        );
-    }
-
-    render(): JSX.Element {
-        return (
-            <Paper>
-                {this.renderGraphSelector()}
-            </Paper>
-        );
-    }
+        </QueryRenderer>
+    );
 }
 
-class DateSelector extends React.Component {
-    constructor(props: any) {
-        super(props);
+function renderSelectorItemsFromObject(obj): JSX.Element[] {
+    const output: JSX.Element[] = [];
+    for(const prop in obj) {
+        const name = obj[prop];
+        output.push(<MenuItem value={name}>{name}</MenuItem>);
     }
+    return output;
+}
 
-    date = new Date();
+const startDateOffset = 60;
 
-    handleUpdate(): void {
+const HistoricalData = () => {
+    const classes = useStyles();
 
-    }
+    const [graph1Type, setGraph1Type] = React.useState(GraphTypes.totalEnergyGraph);
+    const [graph1Granularity, setGraph1Granularity] = React.useState(GranularityTypes.day);
+    const [graph2Type, setGraph2Type] = React.useState(GraphTypes.totalEnergyGraph);
+    const [graph2Granularity, setGraph2Granularity] = React.useState(GranularityTypes.day);
+    const [startDate, setStartDate] = React.useState(new Date( Date.now() - ( startDateOffset * 24 * 60 * 60 * 1000)));
+    const [endDate, setEndDate] = React.useState(new Date());
 
-    render(): JSX.Element {
+    function renderDateRangeSelector(): JSX.Element {
         return (
+            <Paper>
+                <Title>Date Range</Title>
+                <MuiPickersUtilsProvider utils = {DateFnsUtils}>
+                <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Start date"
+                value={startDate}
+                onChange={(date, value) => { setStartDate(value as any) }}
+                KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                }}
+            />
             <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
                 format="MM/dd/yyyy"
                 margin="normal"
                 id="date-picker-inline"
-                label="Date picker inline"
-                value={this.date}
-                onChange={this.handleUpdate}
+                label="End date"
+                value={endDate}
+                onChange={(date, value) => { setEndDate(value as any) }}
                 KeyboardButtonProps={{
                     'aria-label': 'change date',
                 }}
             />
-        );
-    }
-}
-
-class DateRangeSelector extends React.Component {
-    render(): JSX.Element {
-        return (
-            <Paper>
-                <Title>Date Range</Title>
-                <MuiPickersUtilsProvider utils = {DateFnsUtils}>
-                    <DateSelector></DateSelector>
-                    <DateSelector></DateSelector>
                 </MuiPickersUtilsProvider>
             </Paper>
         );  
     }
-}
 
-class HistoricalDataPage extends React.Component {
-    render(): JSX.Element {
+    function renderGranularitySelector(granularity: string, setGranularity): JSX.Element {
         return (
-            <Grid container spacing={3}>
-                <Grid item>
-                    <GraphInstance></GraphInstance>                
-                </Grid>
-                <Grid item>
-                    <GraphInstance></GraphInstance>                
-                </Grid>
-                <Grid item>
-                    <DateRangeSelector></DateRangeSelector>
-                </Grid>
-            </Grid>
+            <Paper>
+                {/* <h3>Set Time Scale</h3> */}
+                <FormControl>
+                    <Select
+                        value={granularity}
+                        onChange={(event) => { setGranularity(event.target.value) }}
+                    >
+                    {renderSelectorItemsFromObject(GranularityTypes)}
+                    </Select>
+                </FormControl>
+            </Paper>
         );
     }
-}
-
-const HistoricalData = () => {
-    const classes = useStyles();
+    
+    function renderGraphBox(graphType: string, setGraphType, granularity: string, setGranularity): JSX.Element {
+        return (
+            <Paper>
+                <FormControl>
+                    <Select
+                        value={graphType}
+                        onChange={(event) => { setGraphType(event.target.value) } }
+                    >
+                        {renderSelectorItemsFromObject(GraphTypes)}
+                    </Select>
+                </FormControl>
+                {renderGranularitySelector(granularity, setGranularity)}
+                {renderGraph(graphType, startDate, endDate, granularity)}
+            </Paper>
+        );
+    }
+    
     return (
-        <div className={classes.container}>
-            <HistoricalDataPage></HistoricalDataPage>
-        </div>
+        <Grid container spacing={3}>
+            <Grid item>
+                {renderGraphBox(graph1Type, setGraph1Type, graph1Granularity, setGraph1Granularity)}
+            </Grid>
+            <Grid item>
+                {renderGraphBox(graph2Type, setGraph2Type, graph2Granularity, setGraph2Granularity)}
+            </Grid>
+            <Grid item>
+                {renderDateRangeSelector()}
+            </Grid>
+        </Grid>
     );
 };
 
