@@ -25,16 +25,15 @@ class DashboardPage extends React.Component {
   }
 
   componentDidMount() {
-    // this.getWeatherData();
-    // TODO: Uncomment for refreshing weather data
-    // this.timerID = setInterval(
-    //   () => this.getWeatherData(),
-    //   120000
-    // );
+    this.getWeatherData();
+    this.timerID = setInterval(
+      () => this.getWeatherData(),
+      500000
+    );
   }
 
   componentWillUnmount() {
-    // clearInterval(this.timerID);
+    clearInterval(this.timerID);
   }
 
   kToF(temp) {
@@ -49,7 +48,7 @@ class DashboardPage extends React.Component {
       .then(res => res.json())
       .then(
         (result) => {
-          if (result.cod == 429) {
+          if (result.cod === 429) {
 
           }
           else {
@@ -74,11 +73,11 @@ class DashboardPage extends React.Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Grid container spacing={3}>
-          <Grid item>
+        <Grid container spacing={3} className={classes.centerGrid}>
+          <Grid item lg={5}>
             <Paper className={classes.rowPaper}>
-              <Grid container spacing={3}>
-                <Grid item>
+              <Grid container spacing={3} justify="space-evenly">
+                <Grid item >
                   <Grid
                     container
                     direction="column"
@@ -110,11 +109,12 @@ class DashboardPage extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <Grid container direction="column" spacing={3}>
+                  <Grid container direction="column" spacing={3} style={{padding: 15}}>
                     <Grid item>
                       <ReactSpeedometer
                         maxValue={45}
                         value={this.state.w_speed}
+                        // eslint-disable-next-line
                         currentValueText="Wind Speed: ${value} mph"
                         startColor="lightgreen"
                         endColor="red"
@@ -126,6 +126,7 @@ class DashboardPage extends React.Component {
                       <ReactSpeedometer
                         maxValue={4500}
                         value={this.state.power}
+                        // eslint-disable-next-line
                         currentValueText="Power: ${value} W"
                         startColor="lightgreen"
                         endColor="red"
@@ -137,28 +138,26 @@ class DashboardPage extends React.Component {
               </Grid>
             </Paper>
           </Grid>
-          <Grid item>
+          <Grid item lg={5}>
             <Paper className={classes.paper}>
-              <Title>Live View</Title>
-              <img
+              <img className={classes.media}
                 alt="Not Loaded"
                 src="https://zoneminder.clarkson.edu/cgi-bin-zm/zms?mode=jpeg&maxfps=30&monitor=15&user=viewer1&pass=media4u"
-                height="302"
-               />
+              />
             </Paper>
           </Grid>
-          <Grid item>
-            <Paper className={classes.paper}>
+          <Grid item lg={5}>
+            <Paper className={classes.paper} >
               <div align="center">
-              <Title>Hourly Energy Output</Title>
+                <Title>Hourly Energy Output (kWh/h)</Title>
               </div>
               <HourlyEnergyChart />
             </Paper>
           </Grid>
-          <Grid item>
+          <Grid item lg={5}>
             <Paper className={classes.paper}>
               <div align="center">
-              <Title>Instantaneous Power Output</Title>
+                <Title>Instantaneous Power Output (W)</Title>
               </div>
               <InstantaneousPowerChart />
             </Paper>

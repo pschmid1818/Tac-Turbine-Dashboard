@@ -69,6 +69,8 @@ export const useStyles = makeStyles(theme => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   paper: {
     padding: theme.spacing(2),
@@ -77,6 +79,17 @@ export const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'stretch',
 
+  },
+  rowPaper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'row',
+    alignItems: 'stretch',
+
+  },
+  centerGrid: {
+    justifyContent: 'center'
   },
   fixedHeight: {
     height: 240,

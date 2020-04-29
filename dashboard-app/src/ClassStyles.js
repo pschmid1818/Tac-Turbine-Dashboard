@@ -75,7 +75,13 @@ export const classStyles = theme => ({
         overflow: 'auto',
         flexDirection: 'column',
         alignItems: 'stretch',
+        height: '100%'
 
+    },
+    media:{
+        height: 365,
+        width:'100%',
+        objectFit:'cover'
     },
     rowPaper:{
         padding: theme.spacing(2),
@@ -83,8 +89,11 @@ export const classStyles = theme => ({
         overflow: 'auto',
         flexDirection: 'row',
         alignItems: 'stretch',
-
     },
+    centerGrid: {
+        justifyContent: 'center',
+        alignItems:'stretch'
+      },
     fixedHeight: {
         height: 240,
     },
