@@ -1,73 +1,173 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
+import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
-import ChartRenderer from "../components/ChartRenderer";
-import Dashboard from "../components/Dashboard";
-import DashboardItem from "../components/DashboardItem";
-const DashboardItems = [
-  {
-    id: 0,
-    name: "Temperature",
-    vizState: {
-      query: {
-        measures: ["InverterAndWeatherData.tempCelsius"],
-        timeDimensions: [
-          {
-            dimension: "InverterAndWeatherData.timeStamp",
-            granularity: "day"
-          }
-        ],
-        filters: []
-      },
-      chartType: "line"
-    }
-  },
-  {
-    id: 1,
-    name: "New Chart",
-    vizState: {
-      query: {
-        measures: ["InverterAndWeatherData.tempCelsius"],
-        timeDimensions: [
-          {
-            dimension: "InverterAndWeatherData.timeStamp",
-            granularity: "hour"
-          }
-        ],
-        filters: []
-      },
-      chartType: "line"
+import ReactSpeedometer from "react-d3-speedometer";
+import { withStyles } from '@material-ui/core/styles';
+import Title from "../components/Title";
+import Clock from "../components/Clock";
+import { classStyles } from "../ClassStyles";
+import HourlyEnergyChart from "../components/HourlyEnergyChart";
+import InstantaneousPowerChart from "../components/InstantaneousPowerChart";
+
+
+class DashboardPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      power: 1000,
+      w_heading: 0,
+      humidity: 0,
+      temp: 0,
+      pressure: 0,
+      w_speed: 0,
     }
   }
-];
 
-const DashboardPage = () => {
-  const dashboardItem = item => (
-    <Grid item xs={12} lg={6} key={item.id}>
-      <DashboardItem title={item.name}>
-        <ChartRenderer vizState={item.vizState} />
-      </DashboardItem>
-    </Grid>
-  );
+  componentDidMount() {
+    this.getWeatherData();
+    this.timerID = setInterval(
+      () => this.getWeatherData(),
+      500000
+    );
+  }
 
-  const Empty = () => (
-    <div
-      style={{
-        textAlign: "center",
-        padding: 12
-      }}
-    >
-      <Typography variant="h5" color="inherit">
-        There are no charts on this dashboard. Use Playground Build to add one.
-      </Typography>
-    </div>
-  );
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
 
-  return DashboardItems.length ? (
-    <Dashboard>{DashboardItems.map(dashboardItem)}</Dashboard>
-  ) : (
-    <Empty />
-  );
-};
+  kToF(temp) {
+    return (Math.round((temp - 273.15) * (9 / 5) + 32));
+  }
 
-export default DashboardPage;
+  getWeatherData() {
+    let apiKey = 'c26f03572e5e48b6c0a1809e6071fae2';
+    let cityId = '5132103';
+    let url = `http://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apiKey}`;
+    fetch(url)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          if (result.cod === 429) {
+
+          }
+          else {
+            this.setState({
+              w_heading: result.wind.deg,
+              w_speed: result.wind.speed,
+              humidity: result.main.humidity,
+              temp: this.kToF(result.main.temp),
+              pressure: result.main.pressure,
+            });
+          }
+        },
+        (error) => {
+          this.setState({
+
+          });
+        }
+      )
+  }
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <React.Fragment>
+        <Grid container spacing={3} className={classes.centerGrid}>
+          <Grid item lg={5}>
+            <Paper className={classes.rowPaper}>
+              <Grid container spacing={3} justify="space-evenly">
+                <Grid item >
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={3}
+                  >
+                    <Grid item id="conditions_title" >
+                      <Title>Current Conditions</Title>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant='subtitle1'><i>Clarkson University, Potsdam, NY</i></Typography>
+                    </Grid>
+                    <Grid item>
+                      <Clock />
+                    </Grid>
+                    <Grid item id="w_heading" >
+                      <b>Wind Heading: </b> {this.state.w_heading}°
+                    </Grid>
+                    <Grid item id="humidity" >
+                      <b>Humidity: </b> {this.state.humidity}%
+                    </Grid>
+                    <Grid item id="temp" >
+                      <b>Temperature: </b> {this.state.temp}°F
+                    </Grid>
+                    <Grid item id="pressure" >
+                      <b>Pressure: </b> {this.state.pressure} mbar
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Grid container direction="column" spacing={3} style={{padding: 15}}>
+                    <Grid item>
+                      <ReactSpeedometer
+                        maxValue={45}
+                        value={this.state.w_speed}
+                        // eslint-disable-next-line
+                        currentValueText="Wind Speed: ${value} mph"
+                        startColor="lightgreen"
+                        endColor="red"
+                        width={250}
+                        height={150}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <ReactSpeedometer
+                        maxValue={4500}
+                        value={this.state.power}
+                        // eslint-disable-next-line
+                        currentValueText="Power: ${value} W"
+                        startColor="lightgreen"
+                        endColor="red"
+                        width={250}
+                        height={150} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+          <Grid item lg={5}>
+            <Paper className={classes.paper}>
+              <img className={classes.media}
+                alt="Not Loaded"
+                src="https://zoneminder.clarkson.edu/cgi-bin-zm/zms?mode=jpeg&maxfps=30&monitor=15&user=viewer1&pass=media4u"
+              />
+            </Paper>
+          </Grid>
+          <Grid item lg={5}>
+            <Paper className={classes.paper} >
+              <div align="center">
+                <Title>Hourly Energy Output (kWh/h)</Title>
+              </div>
+              <HourlyEnergyChart />
+            </Paper>
+          </Grid>
+          <Grid item lg={5}>
+            <Paper className={classes.paper}>
+              <div align="center">
+                <Title>Instantaneous Power Output (W)</Title>
+              </div>
+              <InstantaneousPowerChart />
+            </Paper>
+          </Grid>
+        </Grid>
+
+      </React.Fragment >
+    );
+  }
+}
+
+
+export default withStyles(classStyles)(DashboardPage);
