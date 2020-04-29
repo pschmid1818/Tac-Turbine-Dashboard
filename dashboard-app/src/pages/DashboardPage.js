@@ -9,7 +9,43 @@ import Clock from "../components/Clock";
 import { classStyles } from "../ClassStyles";
 import HourlyEnergyChart from "../components/HourlyEnergyChart";
 import InstantaneousPowerChart from "../components/InstantaneousPowerChart";
+import { API_URL, CUBEJS_TOKEN } from '../App';
+import cubejs from '@cubejs-client/core';
+import WebSocketTransport from '@cubejs-client/ws-transport';
+import { useCubeQuery } from '@cubejs-client/react';
+import { Row, Col, Statistic, Table } from 'antd';
 
+
+
+const cubejsApi = cubejs({
+  transport: new WebSocketTransport({ authorization: CUBEJS_TOKEN, apiUrl: 'ws://localhost:4000/' })
+});
+
+const Weather = ({ query, cubejsApi }) => {
+  const { resultSet, error, isLoading } = useCubeQuery(query, { subscribe: true, cubejsApi });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <pre>{error.toString()}</pre>;
+  }
+
+  if (!resultSet) {
+    return null;
+  }
+
+  return (
+    <div>
+      {resultSet
+        .seriesNames()
+        .map(s => (
+          <Typography >{resultSet.totalRow()[s.key]}</Typography>
+        ))}
+    </div>
+  )
+};
 
 class DashboardPage extends React.Component {
   constructor(props) {
@@ -25,11 +61,11 @@ class DashboardPage extends React.Component {
   }
 
   componentDidMount() {
-    this.getWeatherData();
-    this.timerID = setInterval(
-      () => this.getWeatherData(),
-      500000
-    );
+    // this.getWeatherData();
+    // this.timerID = setInterval(
+    //   () => this.getWeatherData(),
+    //   500000
+    // );
   }
 
   componentWillUnmount() {
@@ -41,32 +77,7 @@ class DashboardPage extends React.Component {
   }
 
   getWeatherData() {
-    let apiKey = 'c26f03572e5e48b6c0a1809e6071fae2';
-    let cityId = '5132103';
-    let url = `http://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apiKey}`;
-    fetch(url)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          if (result.cod === 429) {
 
-          }
-          else {
-            this.setState({
-              w_heading: result.wind.deg,
-              w_speed: result.wind.speed,
-              humidity: result.main.humidity,
-              temp: this.kToF(result.main.temp),
-              pressure: result.main.pressure,
-            });
-          }
-        },
-        (error) => {
-          this.setState({
-
-          });
-        }
-      )
   }
 
   render() {
@@ -101,7 +112,20 @@ class DashboardPage extends React.Component {
                       <b>Humidity: </b> {this.state.humidity}%
                     </Grid>
                     <Grid item id="temp" >
-                      <b>Temperature: </b> {this.state.temp}°F
+                      <Typography><Weather query={{
+                        "measures": [
+                          "WeatherData.tempF"
+                        ],
+                        "timeDimensions": [
+                          {
+                            "dimension": "WeatherData.time",
+                            "dateRange": "Last 1 day"
+                          }
+                        ],
+                        "limit": 1,
+                        "filters": []
+                      }} cubejsApi={cubejsApi} /> °F</Typography>
+                      
                     </Grid>
                     <Grid item id="pressure" >
                       <b>Pressure: </b> {this.state.pressure} mbar
@@ -109,7 +133,7 @@ class DashboardPage extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <Grid container direction="column" spacing={3} style={{padding: 15}}>
+                  <Grid container direction="column" spacing={3} style={{ padding: 15 }}>
                     <Grid item>
                       <ReactSpeedometer
                         maxValue={45}
